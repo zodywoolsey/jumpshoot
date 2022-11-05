@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://0lte4ervwhtu"]
+
+[ext_resource type="Script" path="res://console.gd" id="1_7uurr"]
+
+[node name="console" type="Control"]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_7uurr")
+
+[node name="VSplitContainer" type="VSplitContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 399.0
+grow_horizontal = 2
+split_offset = 1000
+dragger_visibility = 2
+
+[node name="previous" type="ItemList" parent="VSplitContainer"]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 1152.0
+offset_bottom = 368.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 1
+
+[node name="input" type="LineEdit" parent="VSplitContainer"]
+offset_top = 368.0
+offset_right = 1152.0
+offset_bottom = 399.0
+grow_vertical = 0
+size_flags_vertical = 10
+placeholder_text = "enter a command"
+caret_blink = true

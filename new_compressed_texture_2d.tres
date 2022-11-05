@@ -1,0 +1,5 @@
+[gd_resource type="CompressedTexture2D" format=3 uid="uid://cl1tvcs3072a2"]
+
+[resource]
+resource_local_to_scene = true
+load_path = "res://.godot/imported/texture_01.png-38f28acdb9a95ea2efd835531b47e519.s3tc.ctex"
