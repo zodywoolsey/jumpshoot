@@ -31,9 +31,9 @@ func _process(delta):
 
 # MULTIPLAYER
 
-func startMultiplayer():
-	var network = MultiplayerAPI.new()
-	network.create_client()
+#func startMultiplayer():
+#	var network = MultiplayerAPI
+#	network.create_client()
 
 func connectionFailed(error):
 	print('Error connecting to server:\n'+error)

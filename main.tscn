@@ -3,12 +3,12 @@
 [ext_resource type="Script" path="res://main.gd" id="1_8apo0"]
 [ext_resource type="PackedScene" uid="uid://1ecrc0xjnaw0" path="res://player.tscn" id="1_ti2io"]
 [ext_resource type="PackedScene" uid="uid://dgsasvgo3qpbs" path="res://testLevel.tscn" id="2_mwl7t"]
-[ext_resource type="Texture2D" uid="uid://bydpls5a7fg8p" path="res://addons/kenney_prototype_textures/purple/texture_01.png" id="2_ul07y"]
+[ext_resource type="Texture2D" uid="uid://cmiymqekvqee0" path="res://addons/kenney_prototype_textures/dark/texture_02.png" id="3_k05vf"]
 [ext_resource type="PackedScene" uid="uid://0lte4ervwhtu" path="res://console.tscn" id="4_joxf0"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_noagc"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ayiaa"]
 resource_local_to_scene = true
-albedo_texture = ExtResource("2_ul07y")
+albedo_texture = ExtResource("3_k05vf")
 uv1_scale = Vector3(0.5, 0.5, 0.5)
 uv1_triplanar = true
 
@@ -16,7 +16,7 @@ uv1_triplanar = true
 script = ExtResource("1_8apo0")
 
 [node name="CSGCombiner3D" parent="." instance=ExtResource("2_mwl7t")]
-material_override = SubResource("StandardMaterial3D_noagc")
+material_override = SubResource("StandardMaterial3D_ayiaa")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.30002, 11.4255, 5.11057)
