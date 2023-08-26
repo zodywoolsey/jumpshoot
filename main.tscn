@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cmiymqekvqee0" path="res://addons/kenney_prototype_textures/dark/texture_02.png" id="3_k05vf"]
 [ext_resource type="PackedScene" uid="uid://0lte4ervwhtu" path="res://console.tscn" id="4_joxf0"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ayiaa"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnvwf"]
 resource_local_to_scene = true
 albedo_texture = ExtResource("3_k05vf")
 uv1_scale = Vector3(0.5, 0.5, 0.5)
@@ -16,7 +16,7 @@ uv1_triplanar = true
 script = ExtResource("1_8apo0")
 
 [node name="CSGCombiner3D" parent="." instance=ExtResource("2_mwl7t")]
-material_override = SubResource("StandardMaterial3D_ayiaa")
+material_override = SubResource("StandardMaterial3D_nnvwf")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.30002, 11.4255, 5.11057)
