@@ -37,7 +37,7 @@ extends CharacterBody3D
 @export var MAX_FLOOR_JUMP_BOOST_SPEED : float = 20.0
 var currentFallSpeed : float
 @onready var camparent = $camparent
-@onready var camera :Camera3D= %Camera3D
+@onready var camera :Camera3D= $camparent/Camera3D
 @onready var overlay :Control= $overlay
 @onready var line_3d :Line3D= $Line3D
 @onready var line_2d :Line2D= $Control/Line2D
@@ -136,7 +136,26 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			rotate(Vector3.UP, (-event.relative.x/10000)*MOUSE_SENSITIVITY)
-			camera.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+			
+			if (camparent.rotation_degrees.x >= -170.0) and (camparent.rotation_degrees.x <= 0.0) and camera.rotation_degrees.x == 0.0:
+				print('rotate parent')
+				camparent.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+				camera.rotation.x = 0.0
+			elif camera.rotation_degrees.x >= -45 and camera.rotation_degrees.x <= 90.0:
+				print('rotate camera')
+				camera.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+			if camera.rotation_degrees.x < -45:
+				print('clamping camera down')
+				camera.rotation_degrees.x = -45
+			if camera.rotation_degrees.x > 90.0:
+				print('clamping camera up')
+				camera.rotation_degrees.x = 90.0
+			if camera.rotation_degrees.x > 0.0 and (camparent.rotation_degrees.x < -170.0):
+				camera.rotation.x = 0.0
+				camparent.rotation_degrees.x = -170.0
+			if camera.rotation_degrees.x < 0.0 and (camparent.rotation_degrees.x > 0.0):
+				camera.rotation.x = 0.0
+				camparent.rotation_degrees.x = 0.0
 
 func overlayInput(event):
 	if event is InputEventMouseButton:
