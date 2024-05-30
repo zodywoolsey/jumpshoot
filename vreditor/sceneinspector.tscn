@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7mpieipjypps"]
+
+[ext_resource type="Script" path="res://vreditor/sceneinspector.gd" id="1_lxakv"]
+[ext_resource type="Script" path="res://vreditor/hashed_tree_list.gd" id="2_8dsv3"]
+
+[node name="sceneinspector" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lxakv")
+
+[node name="Tree" type="Tree" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+allow_reselect = true
+allow_search = false
+hide_root = true
+scroll_horizontal_enabled = false
+script = ExtResource("2_8dsv3")

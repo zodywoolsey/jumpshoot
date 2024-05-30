@@ -1,34 +1,51 @@
-[gd_scene load_steps=7 format=3 uid="uid://00a06u2swuox"]
+[gd_scene load_steps=9 format=3 uid="uid://00a06u2swuox"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_8apo0"]
 [ext_resource type="PackedScene" uid="uid://1ecrc0xjnaw0" path="res://player.tscn" id="1_ti2io"]
-[ext_resource type="PackedScene" uid="uid://dgsasvgo3qpbs" path="res://testLevel.tscn" id="2_mwl7t"]
-[ext_resource type="Texture2D" uid="uid://cmiymqekvqee0" path="res://addons/kenney_prototype_textures/dark/texture_02.png" id="3_k05vf"]
 [ext_resource type="PackedScene" uid="uid://0lte4ervwhtu" path="res://console.tscn" id="4_joxf0"]
+[ext_resource type="PackedScene" uid="uid://dgsasvgo3qpbs" path="res://testLevel.tscn" id="5_ea2p4"]
+[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://vreditor/vreditor.tscn" id="6_puna3"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnvwf"]
-resource_local_to_scene = true
-albedo_texture = ExtResource("3_k05vf")
-uv1_scale = Vector3(0.5, 0.5, 0.5)
-uv1_triplanar = true
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7uicv"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[node name="main" type="Node3D" groups=["main"]]
+[sub_resource type="Sky" id="Sky_k0ajx"]
+sky_material = SubResource("ProceduralSkyMaterial_7uicv")
+
+[sub_resource type="Environment" id="Environment_ceiiw"]
+background_mode = 2
+sky = SubResource("Sky_k0ajx")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="main" type="Node3D" groups=["localworldroot", "main"]]
 script = ExtResource("1_8apo0")
 
-[node name="CSGCombiner3D" parent="." instance=ExtResource("2_mwl7t")]
-material_override = SubResource("StandardMaterial3D_nnvwf")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ceiiw")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.30002, 11.4255, 5.11057)
-light_energy = 16.0
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.646646, 0.0092612, 0.762734, 0.57606, 0.661374, 0.480354, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
-omni_range = 33.966
-omni_shadow_mode = 0
 
 [node name="player" parent="." instance=ExtResource("1_ti2io")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.916486, 0)
+SPEED = 6.0
+FLOOR_DAMP = 0.8
+AIR_DAMP = 0.01
+WALL_JUMP_VELOCITY = 8.0
+MOUSE_SENSITIVITY = 20.0
+JUMPS = 1
+WALL_JUMP_BOOST = 1.2
 
 [node name="console" parent="." instance=ExtResource("4_joxf0")]
 visible = false
 grow_vertical = 2
 
 [node name="multiplayerRoot" type="Node3D" parent="." groups=["multiplayerRoot"]]
+
+[node name="inspector" parent="." instance=ExtResource("6_puna3")]
+transform = Transform3D(2, 0, 0, 0, 2, -2.13162e-14, 0, 2.13162e-14, 2, 0, 0, 0.998242)
+
+[node name="Node3D" parent="." instance=ExtResource("5_ea2p4")]

@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://b3sbt3oft3cxg"]
+
+[ext_resource type="Script" path="res://vreditor/vreditor.gd" id="1_8pitw"]
+[ext_resource type="PackedScene" uid="uid://c7mpieipjypps" path="res://vreditor/sceneinspector.tscn" id="2_sp2og"]
+[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="2_tnd62"]
+[ext_resource type="PackedScene" uid="uid://0bmepl1tuxgn" path="res://vreditor/attributes.tscn" id="4_hhemb"]
+[ext_resource type="PackedScene" uid="uid://o4puwki2q2vs" path="res://vreditor/gdscriptpanel.tscn" id="5_s3be6"]
+
+[node name="inspector" type="StaticBody3D" groups=["sceneeditor"]]
+transform = Transform3D(2, 0, 0, 0, 2, -2.13162e-14, 0, 2.13162e-14, 2, 0, 0, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("2_sp2og")
+viewport_size = Vector2i(500, 500)
+metadata/grabbable = true
+
+[node name="attributes" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, -3.04779e-16, -0.707107, 7.53645e-15, 1, 7.10543e-15, 0.707107, -1.03534e-14, 0.707107, 0.222646, -3.64002e-16, 0.0908475)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("4_hhemb")
+viewport_size = Vector2i(500, 500)
+metadata/grabbable = false
+
+[node name="script" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, -7.19492e-08, 0.707107, 5.96046e-08, 1, 4.21469e-08, -0.707107, 1.23444e-08, 0.707107, -0.221393, -1.2116e-15, 0.094655)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("5_s3be6")
+viewport_size = Vector2i(500, 500)
+metadata/grabbable = false
+
+[node name="vreditor" type="Node" parent="."]
+script = ExtResource("1_8pitw")

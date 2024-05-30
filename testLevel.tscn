@@ -10,51 +10,129 @@ albedo_texture = ExtResource("2_qlbbo")
 left_to_right = 0.0
 size = Vector3(10, 2, 2)
 
-[node name="CSGCombiner3D" type="CSGCombiner3D"]
+[node name="Node3D" type="Node3D"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 material_override = ExtResource("1_vbdyx")
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-size = Vector3(100, 0.2, 100)
-
-[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+[node name="CSGMesh3D" type="CSGMesh3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -9)
 material_override = SubResource("StandardMaterial3D_jtnka")
 mesh = SubResource("PrismMesh_ncqox")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.6, -2.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 1.6, -2.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 1.6, -2.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 2.6, 1.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="."]
+[node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 3.6, 5.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="."]
+[node name="CSGBox3D8" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 4.6, 9.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="."]
+[node name="CSGBox3D9" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 5.6, 13.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="."]
+[node name="CSGBox3D10" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 6.6, 17.5)
 size = Vector3(2, 1, 2)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="."]
+[node name="CSGBox3D7" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 10.6, 17.5)
 size = Vector3(2, 12, 2)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 402.5, 0)
+use_collision = true
+flip_faces = true
+size = Vector3(500, 806, 500)
+material = ExtResource("1_vbdyx")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 143, -19)
+use_collision = true
+radius = 2.0
+height = 290.0
+sides = 64
+material = ExtResource("1_vbdyx")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 156, -37.82)
+use_collision = true
+radius = 7.09
+height = 290.0
+sides = 64
+material = ExtResource("1_vbdyx")
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="CSGCylinder3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+operation = 2
+use_collision = true
+radius = 6.625
+height = 295.185
+sides = 64
+material = ExtResource("1_vbdyx")
+
+[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+material_override = ExtResource("1_vbdyx")
+use_collision = true
+
+[node name="floating wall" type="CSGBox3D" parent="CSGCombiner3D2"]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 21.3333, 5, 7)
+material_override = ExtResource("1_vbdyx")
+size = Vector3(23, 7, 1)
+
+[node name="floating wall2" type="CSGBox3D" parent="CSGCombiner3D2"]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 21.3333, 5, 12)
+material_override = ExtResource("1_vbdyx")
+size = Vector3(23, 7, 1)
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D2"]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 32.8333, 5, 9.5)
+radius = 2.225
+height = 7.0
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D2/CSGCylinder3D2"]
+operation = 2
+radius = 2.0
+height = 7.0
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D2/CSGCylinder3D2/CSGCylinder3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, -0.25)
+size = Vector3(2.5, 9, 4.5)
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="CSGCombiner3D2"]
+transform = Transform3D(1, 0, 2.38419e-07, 0, 1, 0, -2.38419e-07, 0, 1, 9.8333, 5, 9.5)
+radius = 2.225
+height = 7.0
+sides = 64
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D2/CSGCylinder3D3"]
+operation = 2
+radius = 2.0
+height = 7.0
+sides = 64
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D2/CSGCylinder3D3/CSGCylinder3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0, -0.25)
+size = Vector3(2.5, 9, 4.5)
