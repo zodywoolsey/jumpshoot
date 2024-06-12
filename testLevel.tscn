@@ -10,7 +10,7 @@ albedo_texture = ExtResource("2_qlbbo")
 left_to_right = 0.0
 size = Vector3(10, 2, 2)
 
-[node name="Node3D" type="Node3D"]
+[node name="testlevel01" type="Node3D"]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)

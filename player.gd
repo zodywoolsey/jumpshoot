@@ -19,10 +19,17 @@ extends CharacterBody3D
 @export var WALL_FALL_SPEED : float = 1
 ## Mouse sensitivity
 @export var MOUSE_SENSITIVITY : float = 10
-## Max number of jumps (the initial jump off of the ground doesn't count;[br][br]
-## aka:[br][code]JUMPS = 10[/code][br]
-## means the player gets 10 jumps while in the air + 1 ground jump
+## Max number of jumps. [br]Initial leap off the ground counts as a jump[br]jumps are
+## refreshed instantly upon touching the ground or a wall
 @export var JUMPS : int = 10
+## Amount of time (in seconds) that the player has after leaving the ground
+## before their ground jump is exhausted (if they jumped to leave the ground
+## the jump is exhausted anyway)
+@export var JUMP_GRACE_PERIOD : float = 0.1
+## Amount of time (in seconds) that the jump action will be buffered when the 
+## player tries to jump. This allows the player to try to jump early and still
+## perform a jump if jumping is allowed before the timer expires.
+@export var JUMP_BUFFER : float = .2
 ## Velocity multiplier for boosting the player speed while in the air
 @export var AIR_JUMP_BOOST : float = 1.1
 ## Limit for how fast the player can be moving before the [code]AIR_JUMP_BOOST[/code] no longer boost in the current direction
@@ -41,10 +48,19 @@ var currentFallSpeed : float
 @onready var overlay :Control= $overlay
 @onready var line_3d :Line3D= $Line3D
 @onready var line_2d :Line2D= $Control/Line2D
+@onready var stepupshapecast = $stepupshapecast
+@onready var shootcast = $camparent/Camera3D/shootcast
+@onready var player_collision_shape = $CollisionShape3D
 
 var jumps : int = JUMPS
+var crouched : bool = false
+var jump_grace_period_timer : float = 0.0
+var jump_buffer_timer : float = 0.0
+var jumped : bool = false
+var tryjump : bool = false
 
 func _ready():
+	shootcast.add_exception(self)
 	currentFallSpeed = FALL_SPEED
 	overlay.connect("gui_input", overlayInput)
 
@@ -56,26 +72,37 @@ func _process(delta):
 		get_tree().get_first_node_in_group("sceneeditor").look_at(get_viewport().get_camera_3d().global_position,Vector3.UP,true)
 
 func _physics_process(delta):
+	# if the player touches the wall or the floor, reset number of jumps
+	if is_on_wall() or is_on_floor():
+		if jumped:
+			jumped = false
+		if !jumped:
+			jumps = JUMPS
+		jump_grace_period_timer = 0.0
+	if jump_grace_period_timer + delta > JUMP_GRACE_PERIOD and jumps == JUMPS:
+		jumps -= 1
+	jump_grace_period_timer += delta
+	if JUMP_BUFFER > 0.0:
+		jump_buffer_timer += delta
+	if tryjump and jump_buffer_timer > JUMP_BUFFER:
+		tryjump = false
 	var input_dir := Vector2()
-	var jumped := false
-	var direction = Vector3()
+	var direction := Vector3()
 	# if mouse is captured by the window...
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		# get the direction vector from the directional inputs
 		input_dir = Input.get_vector("left", "right", "forward", "backward")
 		# translate the input directions to relative to what direction the player is facing
-		direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y))
+		direction = ((camera.global_basis * Vector3(input_dir.x, 0, input_dir.y))*Vector3(1.0,0.0,1.0)).normalized()
 		# and the jump button was just pressed, then jump
-		if Input.is_action_just_pressed("jump"):
+		if tryjump:
+			if JUMP_BUFFER == 0:
+				tryjump = false
 			jumped = true
 			jump(direction)
 		# and the escape button was just pressed, unlock the mouse
 		if Input.is_action_just_pressed("esc"):
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	
-	# if the player touches the wall or the floor, reset number of jumps
-	if is_on_wall() or is_on_floor():
-		jumps = JUMPS
 	
 	# if player is not on the floor
 	if not is_on_floor():
@@ -137,14 +164,18 @@ func _input(event):
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			rotate(Vector3.UP, (-event.relative.x/10000)*MOUSE_SENSITIVITY)
 			camera.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+	if event.is_action_pressed("jump"):
+		tryjump = true
+		jump_buffer_timer = 0.0
 
 func overlayInput(event):
 	if event is InputEventMouseButton:
 		if event.button_index == 1:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-func jump(direction):
+func jump(direction:Vector3):
 	if jumps > 0:
+		tryjump = false
 		jumps -= 1
 		if is_on_floor():
 			velocity.x *= (FLOOR_JUMP_BOOST)
