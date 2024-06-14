@@ -20,7 +20,7 @@ sky = SubResource("Sky_k0ajx")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_if66p"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_pkb6h"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -59,7 +59,7 @@ JUMPS = 2
 WALL_JUMP_BOOST = 1.2
 
 [node name="Line3D" parent="player" index="3"]
-mesh = SubResource("ArrayMesh_if66p")
+mesh = SubResource("ArrayMesh_pkb6h")
 
 [node name="console" parent="." instance=ExtResource("4_joxf0")]
 visible = false

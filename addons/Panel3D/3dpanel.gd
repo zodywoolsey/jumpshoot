@@ -114,10 +114,11 @@ func _ready():
 #grab any non-mouse input from the window and pass it through directly to the
 # viewport this is necessary because removing the SubViewportContainer makes
 # it so inptus are not automatically passed to the SubViewport
-	get_tree().root.window_input.connect(func(event):
-		if !(event is InputEventMouse):
-			viewport.push_input(event)
-		)
+	if !Engine.is_editor_hint():
+		get_tree().root.window_input.connect(func(event):
+			if !(event is InputEventMouse):
+				viewport.push_input(event)
+			)
 
 func laser_input(data:Dictionary):
 	var event

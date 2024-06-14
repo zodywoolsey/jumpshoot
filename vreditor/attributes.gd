@@ -27,7 +27,6 @@ var target : Node = null
 #		update_fields()
 
 func set_target(node):
-	print('attribute target set')
 	if node and node is Node:
 		targetname.text = node.name
 		if "visible" in node:
