@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://o4puwki2q2vs"]
 
-[ext_resource type="Script" path="res://vreditor/gdscriptpanel.gd" id="1_70sel"]
+[ext_resource type="Script" uid="uid://b2e5sd7ss47h0" path="res://vreditor/gdscriptpanel.gd" id="1_70sel"]
 
 [node name="gdscriptpanel" type="Control"]
 layout_mode = 3

@@ -17,8 +17,15 @@ extends CharacterBody3D
 @export var FALL_SPEED : float = 10
 ## Falling speed while attached to a wall
 @export var WALL_FALL_SPEED : float = 1
+## The amount of time that it takes to interpolate WALL_FALL_SPEED to FALL_SPEED
+## while the player is touching a wall
+## (timer gets reset when a player is not exclusively touching a wall)
+@export var WALL_FALL_SPEED_TIMER : float = 1.0
 ## Mouse sensitivity
-@export var MOUSE_SENSITIVITY : float = 10
+@export var MOUSE_SENSITIVITY : float = 20.0
+## Camera motion mode (should the camera have the 'look through the legs' system)
+## 0 is for normal camera, 1 is for leg vision camera
+@export var CAMERAMOTIONMODE : int = 0
 ## Max number of jumps. [br]Initial leap off the ground counts as a jump[br]jumps are
 ## refreshed instantly upon touching the ground or a wall
 @export var JUMPS : int = 10
@@ -51,6 +58,7 @@ var currentFallSpeed : float
 @onready var stepupshapecast = $stepupshapecast
 @onready var shootcast = $camparent/Camera3D/shootcast
 @onready var player_collision_shape = $CollisionShape3D
+@onready var headcollider: CollisionShape3D = $headcollider
 
 var jumps : int = JUMPS
 var crouched : bool = false
@@ -58,6 +66,7 @@ var jump_grace_period_timer : float = 0.0
 var jump_buffer_timer : float = 0.0
 var jumped : bool = false
 var tryjump : bool = false
+var walltime : float = 0.0
 
 func _ready():
 	shootcast.add_exception(self)
@@ -72,8 +81,9 @@ func _process(delta):
 		get_tree().get_first_node_in_group("sceneeditor").look_at(get_viewport().get_camera_3d().global_position,Vector3.UP,true)
 
 func _physics_process(delta):
+	headcollider.global_position = camera.global_position
 	# if the player touches the wall or the floor, reset number of jumps
-	if is_on_wall() or is_on_floor():
+	if is_on_wall() or stepupshapecast.is_colliding():
 		if jumped:
 			jumped = false
 		if !jumped:
@@ -105,7 +115,7 @@ func _physics_process(delta):
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
 	# if player is not on the floor
-	if not is_on_floor():
+	if not stepupshapecast.is_colliding() or Input.is_action_pressed("slide"):
 		# if the player is touching a wall
 		if is_on_wall():
 			#velocity.x *= 1.0+delta
@@ -117,7 +127,7 @@ func _physics_process(delta):
 				velocity.z += (get_wall_normal()*-100.0).z*delta
 			# set the gravity to the wall running fall speed
 			if velocity.y < 0:
-				currentFallSpeed = WALL_FALL_SPEED
+				currentFallSpeed = lerpf(WALL_FALL_SPEED, FALL_SPEED, clamp( remap(walltime,0.0,WALL_FALL_SPEED_TIMER, 0.0, 1.0), 0.0, 1.0 ))
 		# otherwise, set the gravity to the normal falling speed
 		else:
 			currentFallSpeed = FALL_SPEED
@@ -126,7 +136,7 @@ func _physics_process(delta):
 	
 	if direction:
 		var flat_velocity := Vector2(velocity.x,velocity.z)
-		if is_on_floor() and !jumped:
+		if stepupshapecast.is_colliding() and !jumped and !Input.is_action_pressed("slide"):
 			velocity.x += (direction.x * (SPEED)*10)*delta
 			velocity.z += (direction.z * (SPEED)*10)*delta
 		else:
@@ -146,7 +156,7 @@ func _physics_process(delta):
 				velocity.x = velmod.x
 				velocity.z = velmod.y
 	#else:
-	if is_on_floor():
+	if stepupshapecast.is_colliding() and !Input.is_action_pressed("slide"):
 		velocity.x = lerpf(velocity.x,0.0,(FLOOR_DAMP*delta)*10)
 		velocity.z = lerpf(velocity.z,0.0,(FLOOR_DAMP*delta)*10)
 	else:
@@ -154,16 +164,59 @@ func _physics_process(delta):
 		velocity.z = lerpf(velocity.z,0.0,(AIR_DAMP*delta)*1)
 	
 	# limit the fall speed while touching a wall to emulate wall running behavior
-	if is_on_wall_only() and velocity.y < -currentFallSpeed: velocity.y = move_toward(velocity.y, -currentFallSpeed, SPEED)
+	if is_on_wall_only():
+		if velocity.y < -currentFallSpeed: velocity.y = move_toward(velocity.y, -currentFallSpeed, SPEED)
+		walltime += delta
+	else:
+		walltime = 0.0
+	
+	if Input.is_action_pressed("slide"):
+		floor_stop_on_slope = false
+	else:
+		floor_stop_on_slope = true
 	
 	move_and_slide()
 
 
 func _input(event):
-	if event is InputEventMouseMotion:
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			rotate(Vector3.UP, (-event.relative.x/10000)*MOUSE_SENSITIVITY)
-			camera.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+	match CAMERAMOTIONMODE:
+		0:
+			if event is InputEventMouseMotion:
+				if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+					find_child("mouselabel").text = ("move by: " + str((-event.relative.x/10000.0)*MOUSE_SENSITIVITY) )
+					find_child("mouselabel").text += "mouse sens: " + str(MOUSE_SENSITIVITY)
+					if OS.get_name() == "Web":
+						rotation.y += (-event.relative.x/10000.0)*(MOUSE_SENSITIVITY*4.0)
+						camera.rotation.x += (-event.relative.y/10000.0)*(MOUSE_SENSITIVITY*4.0)
+					rotation.y += (-event.relative.x/10000.0)*MOUSE_SENSITIVITY
+					camera.rotation.x += (-event.relative.y/10000.0)*MOUSE_SENSITIVITY
+		1:
+			if event is InputEventMouseMotion:
+				if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+					# head tilting down, not looking up, not looking between legs
+					if (camparent.rotation_degrees.x >= -170.0) and (camparent.rotation_degrees.x <= 0.0) and camera.rotation_degrees.x == 0.0:
+						camparent.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+						camera.rotation.x = 0.0
+						rotate(Vector3.UP, (-event.relative.x/10000)*MOUSE_SENSITIVITY)
+					# head looking up 
+					elif camera.rotation_degrees.x >= -45 and camera.rotation_degrees.x <= 90.0:
+						camera.rotate(Vector3.RIGHT, (-event.relative.y/10000)*MOUSE_SENSITIVITY)
+						rotate(Vector3.UP, (-event.relative.x/10000)*MOUSE_SENSITIVITY)
+					# prevents head from going beyond a safe point while looking
+					# between the legs
+					if camera.rotation_degrees.x < -45:
+						camera.rotation_degrees.x = -45
+					# prevents head from looking too far up, which will lock the
+					# camera because of the hard if statement logic here
+					if camera.rotation_degrees.x > 90.0:
+						camera.rotation_degrees.x = 90.0
+					# allows the camera to look back up
+					if camera.rotation_degrees.x > 0.0 and (camparent.rotation_degrees.x < -170.0):
+						camera.rotation.x = 0.0
+						camparent.rotation_degrees.x = -170.0
+					if camera.rotation_degrees.x < 0.0 and (camparent.rotation_degrees.x > 0.0):
+						camera.rotation.x = 0.0
+						camparent.rotation_degrees.x = 0.0
 	if event.is_action_pressed("jump"):
 		tryjump = true
 		jump_buffer_timer = 0.0
@@ -177,7 +230,7 @@ func jump(direction:Vector3):
 	if jumps > 0:
 		tryjump = false
 		jumps -= 1
-		if is_on_floor():
+		if stepupshapecast.is_colliding():
 			velocity.x *= (FLOOR_JUMP_BOOST)
 			velocity.z *= (FLOOR_JUMP_BOOST)
 			velocity += get_floor_normal()*JUMP_VELOCITY

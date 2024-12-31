@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://1ecrc0xjnaw0" path="res://player.tscn" id="1_w0j02"]
 [ext_resource type="Material" uid="uid://c55ufxgbmfshx" path="res://testLevel.tres" id="2_ahb53"]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_tl7td"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_53hjm"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -17,8 +17,8 @@ _surfaces = [{
 
 [node name="player" parent="." instance=ExtResource("1_w0j02")]
 
-[node name="Line3D" parent="player" index="3"]
-mesh = SubResource("ArrayMesh_tl7td")
+[node name="Line3D" parent="player" index="4"]
+mesh = SubResource("ArrayMesh_53hjm")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)

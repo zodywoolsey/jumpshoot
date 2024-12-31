@@ -143,6 +143,17 @@ func laser_input(data:Dictionary):
 	# Set event pressed value (should be false if not explicitly changed)
 	if data.pressed and "pressed" in event:
 		event.pressed = data.pressed
+	if data.pressed and "button_mask" in event:
+		print('hover pressed')
+		event.button_mask = MOUSE_BUTTON_MASK_LEFT
+	if event is InputEventWithModifiers:
+		if Input.is_physical_key_pressed(KEY_CTRL):
+			event.ctrl_pressed = true
+		if Input.is_physical_key_pressed(KEY_SHIFT):
+			event.shift_pressed = true
+		if Input.is_physical_key_pressed(KEY_ALT):
+			event.alt_pressed = true
+	#print(event)
 	# Get the size of the quad mesh we're rendering to
 	var quad_size = mesh.mesh.size
 	# Convert GLOBAL collision point from to be in local space of the panel

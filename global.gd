@@ -20,13 +20,13 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if multiplayerConnected:
-		var tmpar : Array = ['player', player.position, player.rotation, player.get_node("Camera3D").rotation]
-		timer += delta
-		if timer > 1/15:
-			multiplayer.send_bytes(var_to_bytes(tmpar),get_multiplayer_authority())
-			timer = 0
+#func _process(delta):
+	#if multiplayerConnected:
+		#var tmpar : Array = ['player', player.position, player.rotation, player.get_node("Camera3D").rotation]
+		#timer += delta
+		#if timer > 1/15:
+			#multiplayer.send_bytes(var_to_bytes(tmpar),get_multiplayer_authority())
+			#timer = 0
 
 
 # MULTIPLAYER

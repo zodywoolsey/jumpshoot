@@ -1,11 +1,11 @@
 [gd_scene load_steps=12 format=3 uid="uid://00a06u2swuox"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_8apo0"]
+[ext_resource type="Script" uid="uid://b7yhbqxqi54iy" path="res://main.gd" id="1_8apo0"]
 [ext_resource type="PackedScene" uid="uid://1ecrc0xjnaw0" path="res://player.tscn" id="1_ti2io"]
 [ext_resource type="PackedScene" uid="uid://0lte4ervwhtu" path="res://console.tscn" id="4_joxf0"]
 [ext_resource type="PackedScene" uid="uid://dgsasvgo3qpbs" path="res://testLevel.tscn" id="5_ea2p4"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://vreditor/vreditor.tscn" id="6_puna3"]
-[ext_resource type="Shader" path="res://playerpostprocesscanvasitem.gdshader" id="7_rskig"]
+[ext_resource type="Shader" uid="uid://b40f1albs7ymw" path="res://playerpostprocesscanvasitem.gdshader" id="7_rskig"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7uicv"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -20,7 +20,7 @@ sky = SubResource("Sky_k0ajx")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_pkb6h"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_7mycd"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -49,17 +49,18 @@ transform = Transform3D(-0.646646, 0.0092612, 0.762734, 0.57606, 0.661374, 0.480
 shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("1_ti2io")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.623692, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.302032, 0.623688, -0.844112)
 SPEED = 6.0
 FLOOR_DAMP = 0.8
 AIR_DAMP = 0.01
 WALL_JUMP_VELOCITY = 8.0
-MOUSE_SENSITIVITY = 20.0
+WALL_FALL_SPEED_TIMER = 3.0
+CAMERAMOTIONMODE = 1
 JUMPS = 2
 WALL_JUMP_BOOST = 1.2
 
-[node name="Line3D" parent="player" index="3"]
-mesh = SubResource("ArrayMesh_pkb6h")
+[node name="Line3D" parent="player" index="4"]
+mesh = SubResource("ArrayMesh_7mycd")
 
 [node name="console" parent="." instance=ExtResource("4_joxf0")]
 visible = false

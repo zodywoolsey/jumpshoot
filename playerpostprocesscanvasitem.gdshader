@@ -15,7 +15,7 @@ uniform float remap_out_high = 1.0;
 
 void fragment() {
 	COLOR = texture(scren_tex, SCREEN_UV);
-	
+
 	//ALPHA = clamp(linear_depth/20.0,0.0,1.0);
 }
 

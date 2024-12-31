@@ -13,10 +13,8 @@ func _process(delta):
 	else:
 		target_position = Vector3(0,0,-10)
 	if Input.get_mouse_button_mask() == MOUSE_BUTTON_LEFT and !clicked:
-		click()
 		clicked = true
 	if Input.get_mouse_button_mask() == 0:
-		release()
 		clicked = false
 
 func _input(event):
@@ -29,48 +27,46 @@ func _input(event):
 					scrolldown()
 
 func _physics_process(delta):
-	if is_colliding():
-		var tmpcol = get_collider()
-		if tmpcol.has_method("laser_input"):
-			if prevHover and prevHover != tmpcol:
-				prevHover.laser_input({
-					'hovering': false,
-					'pressed': false,
-					'position': get_collision_point(),
-					"action": "hover"
-				})
+	var tmpcol
+	var point = (target_position)
+	if prevHover:
+		print("prevhover")
+		tmpcol = prevHover
+		if is_colliding():
+			point = get_collision_point()
+			if get_collider() != prevHover and !pressed:
+				tmpcol = get_collider()
+				prevHover = tmpcol
+		else:
+			if !pressed:
+				print('clear prevhover')
+				prevHover = null
+	elif is_colliding():
+		print('colliding and not prevhover')
+		tmpcol = get_collider()
+		point = get_collision_point()
+		prevHover = tmpcol
+	if is_instance_valid(tmpcol) and "laser_input" in tmpcol:
+		if clicked:
+			if !pressed:
+				click(tmpcol,point)
 			else:
 				tmpcol.laser_input({
-					'hovering': true,
-					'pressed': false,
-					"position": get_collision_point(),
-					"action": "hover"
+					'hovering': prevHover == tmpcol,
+					'pressed': pressed,
+					'position': point,
+					'action': 'hover'
 				})
-			prevHover = tmpcol
-		else:
-			if prevHover and prevHover.has_method("laser_input"):
-				prevHover.laser_input({
-					'hovering': false,
-					'pressed': false,
-					'position': get_collision_point(),
-					"action": "hover"
+		elif !clicked:
+			if pressed:
+				release(tmpcol,point)
+			else:
+				tmpcol.laser_input({
+					'hovering': prevHover == tmpcol,
+					'pressed': pressed,
+					'position': point,
+					'action': 'hover'
 				})
-	else:
-		if prevHover and prevHover.has_method("laser_input") and prevHover.has_method('laser_input'):
-			prevHover.laser_input({
-				'hovering': false,
-				'pressed': false,
-				'position': get_collision_point(),
-				'action': 'hover'
-			})
-			if pressed and prevHover.has_method('laser_input'):
-				prevHover.laser_input({
-					"position": get_collision_point(),
-					"pressed": false,
-					'action': 'click'
-					})
-			prevHover = null
-#	print(currentAction)
 
 func scrollup():
 	if is_colliding():
@@ -102,31 +98,20 @@ func scrolldown():
 				"action": "scrolldown"
 				})
 
-func click():
-	if is_colliding():
-		var tmpcol = get_collider()
-		if tmpcol.has_method("laser_input"):
-			tmpcol.laser_input({
-				"position": get_collision_point(),
-				"pressed": true,
-				'action': 'click'
-				})
-			pressed = true
+func click(target:PhysicsBody3D,point:Vector3):
+	if target.has_method("laser_input"):
+		target.laser_input({
+			"position": point,
+			"pressed": true,
+			'action': 'click'
+			})
+		pressed = true
 
-func release():
-	if is_colliding():
-		var tmpcol = get_collider()
-		if tmpcol.has_method("laser_input"):
-			tmpcol.laser_input({
-				"position": get_collision_point(),
-				"pressed": false,
-				'action': 'click'
-				})
-			pressed = false
-	elif prevHover:
-		if prevHover.has_method("laser_input"):
-			prevHover.laser_input({
-				"position": get_collision_point(),
-				"pressed": false,
-				'action': 'click'
-				})
+func release(target:PhysicsBody3D,point:Vector3):
+	if target.has_method("laser_input"):
+		target.laser_input({
+			"position": point,
+			"pressed": false,
+			'action': 'click'
+			})
+		pressed = false

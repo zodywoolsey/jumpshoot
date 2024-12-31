@@ -44,7 +44,7 @@ func _physics_process(_delta):
 		if !v_box_container.visible:
 			v_box_container.visible = true
 		else:
-			update_fields()
+			update_fields.call_deferred()
 
 func update_fields():
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():

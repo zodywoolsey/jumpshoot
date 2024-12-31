@@ -19,11 +19,15 @@ func _ready():
 
 func _process(_delta):
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
-		val.button_pressed = (target[property_name])
+		_update_fields.call_deferred()
 	elif !is_instance_valid(target):
 		target = null
 		val.button_pressed = false
 		val.text = ''
+
+func _update_fields():
+	if is_instance_valid(target):
+		val.button_pressed = (target[property_name])
 
 func _check_focus():
 	if val.has_focus():

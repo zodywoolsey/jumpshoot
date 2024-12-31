@@ -20,12 +20,16 @@ func _ready():
 
 func _process(_delta):
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
-		xval.text = str(target[property_name].x)
-		yval.text = str(target[property_name].y)
+		_update_fields.call_deferred()
 	elif !is_instance_valid(target):
 		target = null
 		xval.text = ''
 		yval.text = ''
+
+func _update_fields():
+	if is_instance_valid(target):
+		xval.text = str(target[property_name].x)
+		yval.text = str(target[property_name].y)
 
 func _check_focus():
 	if xval.has_focus() or yval.has_focus():

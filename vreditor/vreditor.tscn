@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://b3sbt3oft3cxg"]
 
-[ext_resource type="Script" path="res://vreditor/vreditor.gd" id="1_8pitw"]
+[ext_resource type="Script" uid="uid://b06nhogm85qf1" path="res://vreditor/vreditor.gd" id="1_8pitw"]
 [ext_resource type="PackedScene" uid="uid://c7mpieipjypps" path="res://vreditor/sceneinspector.tscn" id="2_sp2og"]
-[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="2_tnd62"]
+[ext_resource type="Script" uid="uid://b56gn8vahah67" path="res://addons/Panel3D/3dpanel.gd" id="2_tnd62"]
 [ext_resource type="PackedScene" uid="uid://0bmepl1tuxgn" path="res://vreditor/attributes.tscn" id="4_hhemb"]
 [ext_resource type="PackedScene" uid="uid://o4puwki2q2vs" path="res://vreditor/gdscriptpanel.tscn" id="5_s3be6"]
 
