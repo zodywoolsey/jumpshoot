@@ -1,10 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://dgsasvgo3qpbs"]
 
 [ext_resource type="Material" uid="uid://c55ufxgbmfshx" path="res://testLevel.tres" id="1_vbdyx"]
-[ext_resource type="Texture2D" uid="uid://bys6qarh867rp" path="res://addons/kenney_prototype_textures/red/texture_01.png" id="2_qlbbo"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8a0p6"]
+load_path = "res://.godot/imported/texture_01.png-44f9331a67ce6f062549bc436289d3c9.s3tc.ctex"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jtnka"]
-albedo_texture = ExtResource("2_qlbbo")
+albedo_texture = SubResource("CompressedTexture2D_8a0p6")
 
 [sub_resource type="PrismMesh" id="PrismMesh_ncqox"]
 left_to_right = 0.0

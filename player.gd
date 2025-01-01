@@ -53,7 +53,8 @@ var currentFallSpeed : float
 @onready var camparent = $camparent
 @onready var camera :Camera3D= %Camera3D
 @onready var overlay :Control= $overlay
-@onready var line_3d :Line3D= $Line3D
+@onready var line_3d :Line3D= %Line3D
+@onready var line_3d_2: Line3D = %Line3D2
 @onready var line_2d :Line2D= $Control/Line2D
 @onready var stepupshapecast = $stepupshapecast
 @onready var shootcast = $camparent/Camera3D/shootcast
@@ -74,7 +75,6 @@ func _ready():
 	overlay.connect("gui_input", overlayInput)
 
 func _process(delta):
-	line_3d.target = (velocity * basis)
 	line_2d.set_point_position(1,Vector2((velocity * basis).x,(velocity * basis).z)*20.0)
 	if Input.is_action_just_pressed("inspectorsummon"):
 		get_tree().get_first_node_in_group("sceneeditor").global_position = get_viewport().get_camera_3d().to_global(Vector3.FORWARD)
@@ -134,31 +134,44 @@ func _physics_process(delta):
 		# add the appropriate gravity
 		velocity.y -= currentFallSpeed * delta
 	
+	# if the player is trying to move in a direction
 	if direction:
+		# create a flattened version of the velocity to calculate
+		# the velocity preservation when in the air or sliding
 		var flat_velocity := Vector2(velocity.x,velocity.z)
+		# if on the floor and not trying to jump and not sliding
+		# lerp the player movements toward zero to simulate floor friction
 		if stepupshapecast.is_colliding() and !jumped and !Input.is_action_pressed("slide"):
 			velocity.x += (direction.x * (SPEED)*10)*delta
 			velocity.z += (direction.z * (SPEED)*10)*delta
 		else:
+			# determine how much speed to add when trying to move around
+			# in the air or while sliding
 			var veladd :Vector3 = (direction * (AIR_SPEED)*2.0)*delta
 			var wallmod = 1.0
 			if is_on_wall():
 				wallmod = 2.0
+			# add some speed when wall running
 			if (flat_velocity.length() < AIR_SPEED*wallmod) or Vector2((velocity+veladd).x,(velocity+veladd).z).length() < flat_velocity.length():
 				velocity.x += veladd.x
 				velocity.z += veladd.z
 			else:
-				#print('other air move')
+				# get the length of the flat velocity
 				var tmp := flat_velocity.length()
+				# move the player using the air speed
 				velocity.x += (direction.x * (AIR_SPEED)*2.0)*delta
 				velocity.z += (direction.z * (AIR_SPEED)*2.0)*delta
+				# take the new velocity and then multiply it by the 
+				# previous velocity's length to preserve the player's speed
 				var velmod := Vector2(velocity.x,velocity.z).normalized()*tmp
+				# apply the rotated velocity
 				velocity.x = velmod.x
 				velocity.z = velmod.y
-	#else:
+	# if the player is on the ground and not sliding, simulate floor drag
 	if stepupshapecast.is_colliding() and !Input.is_action_pressed("slide"):
 		velocity.x = lerpf(velocity.x,0.0,(FLOOR_DAMP*delta)*10)
 		velocity.z = lerpf(velocity.z,0.0,(FLOOR_DAMP*delta)*10)
+	# otherwise, simulate air drag
 	else:
 		velocity.x = lerpf(velocity.x,0.0,(AIR_DAMP*delta)*1)
 		velocity.z = lerpf(velocity.z,0.0,(AIR_DAMP*delta)*1)
@@ -170,12 +183,20 @@ func _physics_process(delta):
 	else:
 		walltime = 0.0
 	
+	# if the player is sliding, disabled stopping on slopes to preserve
+	# velocity when on slopes
 	if Input.is_action_pressed("slide"):
 		floor_stop_on_slope = false
 	else:
 		floor_stop_on_slope = true
 	
+	var up_offset :Vector3 = stepupshapecast.get_collision_normal(0).direction_to(Vector3.UP)
+	#velocity = up_offset*velocity.length()
+	
 	move_and_slide()
+	velocity = get_real_velocity()
+	line_3d.target = ((up_offset*basis)*velocity.length()).normalized()
+	line_3d_2.target = ((velocity * basis)).normalized()
 
 
 func _input(event):
@@ -233,7 +254,7 @@ func jump(direction:Vector3):
 		if stepupshapecast.is_colliding():
 			velocity.x *= (FLOOR_JUMP_BOOST)
 			velocity.z *= (FLOOR_JUMP_BOOST)
-			velocity += get_floor_normal()*JUMP_VELOCITY
+			velocity += stepupshapecast.get_collision_normal(0)*JUMP_VELOCITY
 		elif is_on_wall():
 			velocity.x *= (WALL_JUMP_BOOST)
 			velocity.z *= (WALL_JUMP_BOOST)
